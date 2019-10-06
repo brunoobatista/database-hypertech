@@ -1,0 +1,80 @@
+version: '3.5'
+
+services:
+  db:
+    container_name: database
+    build: ./db
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_DB: "hypertech"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/data:/var/lib/postgresql/data 
+      - ./db/migration:/var/lib/migration
+    networks:
+      postgres-net:
+        ipv4_address: 172.28.0.3
+      
+  pgadmin4:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "brunorafael.o@hotmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "1234"
+    ports:
+      - "8082:80"
+    depends_on:
+      - db
+    networks:
+      - postgres-net
+
+  api:
+    container_name: api
+    build:
+      context: ./api-hypertech
+      dockerfile: Dockerfile  
+    volumes:
+      - ./api-hypertech:/app
+    working_dir: /app
+    command: sh run.sh
+    networks:
+      - postgres-net
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      postgres-net:
+        ipv4_address: 172.28.0.4
+    command: ./gradlew --project-cache-dir /tmp/gradle-cache bootRun
+
+  client:
+    container_name: client
+    build:
+      context: ./hypertech
+      dockerfile: Dockerfile
+    volumes:
+      - './hypertech:/app'
+      - '/app/node_modules'
+    ports:
+      - '4201:4200'
+      - '49153:49153'
+    networks:
+      postgres-net:
+        ipv4_address: 172.28.0.5
+    depends_on:
+      - db
+
+networks:
+  postgres-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/24
+
+volumes:
+    postgres:
+    pgadmin:
