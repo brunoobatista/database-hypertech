@@ -38,7 +38,7 @@ services:
     volumes:
       - ./api-hypertech:/app
     working_dir: /app
-    command: sh run.sh
+    command: sh ./api-hypertech/run.sh
     networks:
       - postgres-net
     ports:
