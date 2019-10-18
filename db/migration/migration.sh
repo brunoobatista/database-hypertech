@@ -1,12 +1,15 @@
 #!/bin/bash
 #psql -d HIGHWAYS -a -f CLUSTER_1000M.sql
 
-index = 1
+CONFIG=$(</var/lib/migration/config.txt)
+sed -i 's/original/111/g' /var/lib/migration/config.txt
 
 for file in *.sql
     do
-        let "index=index+1"
-        psql -d hypertech -a -f "$file"
+        #cut -c 2-4 $("echo $file")
+ 
+        echo "$file"
+        #psql -d hypertech -a -f "$file"
     done
 
 exit 1 ;
