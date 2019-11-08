@@ -2,6 +2,8 @@
 FROM alpine:3.10
 RUN apk add dos2unix
 
+RUN set -ex && apk --no-cache add sudo
+
 # alpine includes "postgres" user/group in base install
 #   /etc/passwd:22:postgres:x:70:70::/var/lib/postgresql:/bin/sh
 #   /etc/group:34:postgres:x:70:
@@ -153,6 +155,11 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
 
 RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
+
+RUN postgres &\
+ psql --command "IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'postgres')\
+ THEN CREATE USER user WITH SUPERUSER ENCRYPTED PASSWORD '123456'; END IF;" &\
+ createdb main
 
 EXPOSE 5432
 CMD ["postgres"]
