@@ -156,10 +156,9 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
 RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-RUN postgres &\
- psql --command "IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'postgres')\
- THEN CREATE USER user WITH SUPERUSER ENCRYPTED PASSWORD '123456'; END IF;" &\
- createdb main
+# RUN postgres &\
+#  psql --command "IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'postgres') THEN CREATE USER user WITH SUPERUSER ENCRYPTED PASSWORD '123456'; END IF;" &\
+#  createdb main
 
 EXPOSE 5432
 CMD ["postgres"]
