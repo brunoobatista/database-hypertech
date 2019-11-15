@@ -13,6 +13,11 @@ services:
     volumes:
       - ./db/data:/var/lib/postgresql/data 
       - ./db/migration:/var/lib/migration
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 150M
     networks:
       postgres-net:
         ipv4_address: 172.28.0.3
@@ -45,6 +50,11 @@ services:
       - 8080:8080
     depends_on:
       - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 400M
     networks:
       postgres-net:
         ipv4_address: 172.28.0.4
@@ -65,6 +75,11 @@ services:
     networks:
       postgres-net:
         ipv4_address: 172.28.0.5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 200M
     depends_on:
       - db
     command: /command.sh
