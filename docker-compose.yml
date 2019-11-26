@@ -1,9 +1,10 @@
 version: '3.1'
 
 services:
-  db:
-    container_name: database
+  database-prod:
+    container_name: database-prod
     build: ./db
+    image: brunoobatista/database.hypertech
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1234"
@@ -22,11 +23,12 @@ services:
           cpus: '0.30'
           memory: 150M
 
-  api:
-    container_name: api
+  api-prod:
+    container_name: api-prod
     build:
       context: ./api-hypertech
-      dockerfile: Dockerfile  
+      dockerfile: Dockerfile
+    image: brunoobatista/api.hypertech
     volumes:
       - ./api-hypertech:/app
     working_dir: /app
@@ -47,11 +49,12 @@ services:
           memory: 400M
     command: ./gradlew --project-cache-dir /tmp/gradle-cache bootRun
 
-  client:
-    container_name: client
+  client-prod:
+    container_name: client-prod
     build:
       context: ./hypertech
       dockerfile: Dockerfile
+    image: brunoobatista/client.hypertech
     networks:
       postgres-net:
         ipv4_address: 172.28.0.5
@@ -62,9 +65,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.25'
-          memory: 200M
-
+          cpus: '0.30'
+          memory: 400M
 
 networks:
   postgres-net:

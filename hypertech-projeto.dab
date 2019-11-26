@@ -1,0 +1,59 @@
+{
+  "Services": {
+    "api-prod": {
+      "Args": [
+        "./gradlew",
+        "--project-cache-dir",
+        "/tmp/gradle-cache",
+        "bootRun"
+      ],
+      "Env": [
+        "ORIGIN=http://172.28.0.5"
+      ],
+      "Image": "brunoobatista/api.hypertech@sha256:c0d16dc3501a4b5d17b5c3e2a9bd98652528e089c014816c85b5466089c8d82b",
+      "Networks": [
+        "postgres-net"
+      ],
+      "Ports": [
+        {
+          "Port": 8080,
+          "Protocol": "tcp"
+        }
+      ],
+      "WorkingDir": "/app"
+    },
+    "client-prod": {
+      "Env": [
+        "HOST=0.0.0.0"
+      ],
+      "Image": "brunoobatista/client.hypertech@sha256:6dca5c082c38cd300bf357f3428dd82b57a09a600648e943f082c2dda8408be4",
+      "Networks": [
+        "postgres-net"
+      ],
+      "Ports": [
+        {
+          "Port": 4200,
+          "Protocol": "tcp"
+        }
+      ]
+    },
+    "database-prod": {
+      "Env": [
+        "POSTGRES_USER=postgres",
+        "POSTGRES_PASSWORD=1234",
+        "POSTGRES_DB=hypertech"
+      ],
+      "Image": "brunoobatista/database.hypertech@sha256:adaff16f3877f2de8572480c3ba358dc22e7c6b61ad97a4c22039e2cb3c3a332",
+      "Networks": [
+        "postgres-net"
+      ],
+      "Ports": [
+        {
+          "Port": 5432,
+          "Protocol": "tcp"
+        }
+      ]
+    }
+  },
+  "Version": "0.1"
+}
